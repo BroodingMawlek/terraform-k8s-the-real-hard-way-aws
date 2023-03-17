@@ -7,7 +7,7 @@ variable "project" {
 variable "owner" {
   description = "Owner name used for tags"
   type        = string
-  default     = "napo.io"
+  default     = "bob"
 }
 
 variable "stage" {
@@ -25,7 +25,7 @@ variable "aws_profile" {
 variable "aws_region" {
   description = "AWS region (e.g. `us-east-1` => US North Virginia)"
   type        = string
-  default     = "us-east-1"
+  default     = "eu-west-2"
 }
 
 variable "availability_zones" {
@@ -55,6 +55,7 @@ variable "ssh_public_key_path" {
 variable "hosted_zone" {
   description = "Route53 Hosted Zone for creating records (without . suffix, e.g. `napo.io`)"
   type        = string
+  default     = "k8-the-hard-way.com"
 }
 
 variable "pod_cidr" {
@@ -83,55 +84,55 @@ variable "bastion_size" {
 variable "etcd_max_size" {
   description = "Maximum number of EC2 instances for etcd AutoScalingGroup"
   type        = number
-  default     = 3
+  default     = 1
 }
 
 variable "etcd_min_size" {
   description = "Minimum number of EC2 instances for etcd AutoScalingGroup"
   type        = number
-  default     = 3
+  default     = 1
 }
 
 variable "etcd_size" {
   description = "Desired number of EC2 instances for etcd AutoScalingGroup"
   type        = number
-  default     = 3
+  default     = 1
 }
 
 variable "master_max_size" {
   description = "Maximum number of EC2 instances for K8s Master AutoScalingGroup"
   type        = number
-  default     = 3
+  default     = 1
 }
 
 variable "master_min_size" {
   description = "Minimum number of EC2 instances for K8s Master AutoScalingGroup"
   type        = number
-  default     = 3
+  default     = 1
 }
 
 variable "master_size" {
   description = "Desired number of EC2 instances for K8s Master AutoScalingGroup"
   type        = number
-  default     = 3
+  default     = 1
 }
 
 variable "worker_max_size" {
   description = "Maximum number of EC2 instances for K8s Worker AutoScalingGroup"
   type        = number
-  default     = 3
+  default     = 1
 }
 
 variable "worker_min_size" {
   description = "Minimum number of EC2 instances for K8s Worker AutoScalingGroup"
   type        = number
-  default     = 3
+  default     = 1
 }
 
 variable "worker_size" {
   description = "Desired number of EC2 instances for K8s Worker AutoScalingGroup"
   type        = number
-  default     = 3
+  default     = 1
 }
 
 variable "bastion_instance_type" {
