@@ -111,7 +111,6 @@ resource "aws_security_group" "worker" {
   }
 }
 
-
 # Security Group rules to add to above SecurityGroups
 
 ## Ingress
@@ -139,10 +138,10 @@ resource "aws_security_group_rule" "allow_ingress_on_bastion_kubectl" {
   }
   security_group_id        = each.value
   type                     = "ingress"
-  from_port                = 6443
-  to_port                  = 6443
-  protocol                 = "tcp"
-  source_security_group_id = aws_security_group.bastion.id
+  from_port                = 6443 # beginning of range
+  to_port                  = 6443 # end of range
+  protocol                 = "tcp" # set
+  source_security_group_id = aws_security_group.bastion.id # source
   description              = "kubectl: Bastion - ${each.key}"
 }
 
