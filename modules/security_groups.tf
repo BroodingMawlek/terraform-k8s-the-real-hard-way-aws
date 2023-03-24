@@ -184,7 +184,8 @@ resource "aws_security_group_rule" "allow_ingress_on_master-private-lb_kubeapi" 
   from_port         = 6443
   to_port           = 6443
   protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
+#  cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks       = ["10.23.0.0/16"]
   description       = "kubeapi: ALL - MasterPrivateLB"
 }
 

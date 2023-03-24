@@ -1,5 +1,5 @@
 # Route53
-## Bastion Host
+# Bastion Host
 resource "aws_route53_record" "bastion-public" {
   zone_id = data.aws_route53_zone.selected.id
   name    = "bastion"

@@ -1,0 +1,78 @@
+i=1
+for INSTANCE in $(aws autoscaling describe-auto-scaling-instances --query 'AutoScalingInstances[?starts_with(LaunchConfigurationName, `etcd`)].[InstanceId]' --output text); do
+  aws ec2 create-tags --resources $INSTANCE --tags Key=Name,Value=etcd$i
+  IP=$(aws ec2 describe-instances --instance-id $INSTANCE --query 'Reservations[].Instances[].[PrivateIpAddress]' --output text)
+  cat << EOF > /tmp/record.json
+{
+"Comment":"Create/Update etcd A record",
+"Changes":[{
+  "Action":"UPSERT",
+  "ResourceRecordSet":{
+    "Name":"etcd$i.internal.$HOSTEDZONE_NAME",
+    "Type":"A",
+    "TTL":30,
+    "ResourceRecords":[{
+      "Value":"$IP"
+    }]
+  }
+}]
+}
+EOF
+  aws route53 change-resource-record-sets --hosted-zone-id $HOSTEDZONE_ID --change-batch file:///tmp/record.json
+  export ETCD${i}_INTERNAL=$IP
+  i=$((i+1))
+done
+
+i=1
+for INSTANCE in $(aws autoscaling describe-auto-scaling-instances --query 'AutoScalingInstances[?starts_with(LaunchConfigurationName, `master`)].[InstanceId]' --output text); do
+  aws ec2 create-tags --resources $INSTANCE --tags Key=Name,Value=master$i
+  IP=$(aws ec2 describe-instances --instance-id $INSTANCE --query 'Reservations[].Instances[].[PrivateIpAddress]' --output text)
+  cat << EOF > /tmp/record.json
+{
+"Comment":"Create/Update master A record",
+"Changes":[{
+  "Action":"UPSERT",
+  "ResourceRecordSet":{
+    "Name":"master$i.internal.$HOSTEDZONE_NAME",
+    "Type":"A",
+    "TTL":30,
+    "ResourceRecords":[{
+      "Value":"$IP"
+    }]
+  }
+}]
+}
+EOF
+  aws route53 change-resource-record-sets --hosted-zone-id $HOSTEDZONE_ID --change-batch file:///tmp/record.json
+  export MASTER${i}_INTERNAL=$IP
+  i=$((i+1))
+done
+
+i=1
+for INSTANCE in $(aws autoscaling describe-auto-scaling-instances --query 'AutoScalingInstances[?starts_with(LaunchConfigurationName, `worker`)].[InstanceId]' --output text); do
+  aws ec2 create-tags --resources $INSTANCE --tags Key=Name,Value=worker$i
+  IP=$(aws ec2 describe-instances --instance-id $INSTANCE --query 'Reservations[].Instances[].[PrivateIpAddress]' --output text)
+  cat << EOF > /tmp/record.json
+{
+"Comment":"Create/Update worker A record",
+"Changes":[{
+  "Action":"UPSERT",
+  "ResourceRecordSet":{
+    "Name":"worker$i.internal.$HOSTEDZONE_NAME",
+    "Type":"A",
+    "TTL":30,
+    "ResourceRecords":[{
+      "Value":"$IP"
+    }]
+  }
+}]
+}
+EOF
+  aws route53 change-resource-record-sets --hosted-zone-id $HOSTEDZONE_ID --change-batch file:///tmp/record.json
+  export WORKER${i}_INTERNAL=$IP
+  i=$((i+1))
+done
+
+
+
+

@@ -1,0 +1,3 @@
+for etcd in etcd1; do
+  scp ca.pem ca-key.pem kubernetes-key.pem kubernetes.pem ${etcd}:~/
+done

@@ -4,7 +4,12 @@ moved all files into modules
 moved user-data into ./user-data
 
 Docs
+DNS
+
 ssh -i id_rsa ec2-user@<bastion-public-ip>
+add to ~/.ssh/config
+ServerAliveInterval 50
+user for ssh to ec2 is ubuntu
 
 Improvements
 Enable session manager and remove bastion
@@ -19,29 +24,20 @@ Questions
 How is this set
 echo $HOSTEDZONE_NAME && echo $AWS_DEFAULT_REGION
 
-
-errors
-open ip,: no such file or directory
-Failed to parse input: unexpected end of JSON input
-
 cfssl gencert \
-  -ca=ca.pem \
-  -ca-key=ca-key.pem \
-  -config=ca-config.json \
-  -hostname=10.32.0.1,${ETCD1_INTERNAL},\
-    ${MASTER1_INTERNAL},\
-    ${WORKER1_INTERNAL},\
-    etcd1.internal.${HOSTEDZONE_NAME},\
-    master1.internal.${HOSTEDZONE_NAME},\
-    worker1.internal.${HOSTEDZONE_NAME},\
-    ${MASTER_ELB_PRIVATE},${MASTER_ELB_PUBLIC},\
-    127.0.0.1,kubernetes.default \
-  -profile=kubernetes \
-  kubernetes-csr.json | cfssljson -bare kubernetes
+-ca=ca.pem \
+-ca-key=ca-key.pem \
+-config=ca-config.json \
+-hostname=10.32.0.1,${ETCD1_INTERNAL},${MASTER1_INTERNAL},${WORKER1_INTERNAL},\
+etcd1.internal.${HOSTEDZONE_NAME},master1.internal.${HOSTEDZONE_NAME},worker1.internal.${HOSTEDZONE_NAME},\
+${MASTER_ELB_PRIVATE},${MASTER_ELB_PUBLIC},127.0.0.1,kubernetes.default \
+-profile=kubernetes kubernetes-csr.json | cfssljson -bare kubernetes
 
+from bastion this works
+ssh -i k8 ubuntu@ip.eu-west-1.compute.internal
+scp -i k8 ca.pem ubuntu@ip.eu-west-1.compute.internal:~
+scp -i k8 ca.pem ubuntu@ip:~/
 
-
-
-
-
-
+fails
+ssh -i k8 ubuntu@etcd1.internal.k8-the-hard-way.com
+scp -i k8 ca.pem ubuntu@etcd1.internal.k8-the-hard-way.com:~
