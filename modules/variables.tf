@@ -52,6 +52,7 @@ variable "ssh_public_key_path" {
   default     = "~/.ssh/k8.pub"
 }
 
+# TODO document hosted zone
 variable "hosted_zone" {
   description = "Route53 Hosted Zone for creating records (without . suffix, e.g. `napo.io`)"
   type        = string
@@ -63,6 +64,7 @@ variable "pod_cidr" {
   type        = string
   default     = "10.200"
 }
+
 variable "bastion_max_size" {
   description = "Maximum number of EC2 instances for Bastion AutoScalingGroup"
   type        = number
