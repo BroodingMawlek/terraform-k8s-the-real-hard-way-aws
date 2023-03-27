@@ -27,3 +27,13 @@
 #    zone_id                = aws_elb.master-public.zone_id
 #  }
 #}
+
+
+#TODO automate creation of hosted zone
+#resource "aws_route53_zone" "this" {
+#  name = var.hosted_zone
+#    vpc {
+#    vpc_id =
+#  }
+#
+#}

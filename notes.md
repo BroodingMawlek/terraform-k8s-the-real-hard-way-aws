@@ -9,7 +9,7 @@ Moved user-data into ./user-data
 
 ### Documentation notes
 To ssh to the bastion\
-ssh -i id_rsa ec2-user@<bastion-public-ip>
+ssh -i <public_key ec2-user@<bastion-public-ip>
 
 ### Improvements
 Enable session manager and remove bastion\

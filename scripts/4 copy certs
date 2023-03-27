@@ -1,3 +1,15 @@
+# TODO document lesson learned around ~/.ssh/config
+
 for etcd in etcd1; do
   scp ca.pem ca-key.pem kubernetes-key.pem kubernetes.pem ${etcd}:~/
+done
+
+for master in master1; do
+  scp ca.pem ca-key.pem kubernetes-key.pem \
+  kubernetes.pem service-account-key.pem service-account.pem \
+  ${master}:~/
+done
+
+for worker in worker1; do
+  scp ca.pem ${worker}-key.pem ${worker}.pem ${worker}:~/
 done

@@ -40,5 +40,5 @@ data "http" "workstation-external-ip" {
 ## Route53 HostedZone ID from name
 data "aws_route53_zone" "selected" {
   name         = "${var.hosted_zone}."
-  private_zone = false
+  private_zone = true
 }

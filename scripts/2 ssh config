@@ -1,15 +1,15 @@
 # On your workstation (macOS - and if your private key is id_rsa)
-cat ~/.ssh/k8 | pbcopy
+cat ~/.ssh/<key> | pbcopy
 
 # On Bastion
-vi ~/.ssh/id_rsa
-chmod 400 ~/.ssh/k8
+vi ~/.ssh/<key>
+chmod 400 ~/.ssh/<key>
 
 
 vi ~/.ssh/config
 Host etcd1 master1 worker1
   User ubuntu
   HostName %h.internal.k8-the-hard-way.com
-  IdentityFile ~/.ssh/k8
+  IdentityFile ~/.ssh/<key>
 
 chmod 600 ~/.ssh/config

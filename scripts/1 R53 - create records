@@ -1,3 +1,6 @@
+export HOSTEDZONE_ID=$(aws route53 list-hosted-zones-by-name --dns-name $HOSTEDZONE_NAME --query 'HostedZones[].Id' --output text | cut -d/ -f3)
+
+
 i=1
 for INSTANCE in $(aws autoscaling describe-auto-scaling-instances --query 'AutoScalingInstances[?starts_with(LaunchConfigurationName, `etcd`)].[InstanceId]' --output text); do
   aws ec2 create-tags --resources $INSTANCE --tags Key=Name,Value=etcd$i

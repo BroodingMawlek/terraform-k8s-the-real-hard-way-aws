@@ -23,9 +23,9 @@ variable "aws_profile" {
 }
 
 variable "aws_region" {
-  description = "AWS region (e.g. `us-east-1` => US North Virginia)"
+  description = "AWS region"
   type        = string
-  default     = "eu-west-2"
+  default     = "eu-west-1"
 }
 
 variable "availability_zones" {
@@ -49,9 +49,10 @@ variable "aws_key_pair_name" {
 variable "ssh_public_key_path" {
   description = "SSH public key path (to create a new AWS Key Pair from existing local SSH public RSA key)"
   type        = string
-  default     = "~/.ssh/k8.pub"
+  default     = "~/.ssh/kube_rsa.pub"
 }
 
+# TODO This should be automated to avoid misconfiguration
 # TODO document hosted zone
 variable "hosted_zone" {
   description = "Route53 Hosted Zone for creating records (without . suffix, e.g. `napo.io`)"
