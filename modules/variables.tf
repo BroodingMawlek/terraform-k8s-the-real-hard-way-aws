@@ -49,7 +49,7 @@ variable "aws_key_pair_name" {
 variable "ssh_public_key_path" {
   description = "SSH public key path (to create a new AWS Key Pair from existing local SSH public RSA key)"
   type        = string
-  default     = "~/.ssh/id_rsa.pub"
+  default     = "~/.ssh/k8.pub"
 }
 
 variable "hosted_zone" {

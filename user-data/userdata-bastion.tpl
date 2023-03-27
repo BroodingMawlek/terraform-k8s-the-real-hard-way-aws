@@ -6,10 +6,12 @@ wget https://gist.githubusercontent.com/dmytro/3984680/raw/1e25a9766b2f21d7a8e90
 chmod +x /home/ec2-user/tmux-multi.sh
 chown ec2-user:ec2-user /home/ec2-user/tmux-multi.sh
 wget https://pkg.cfssl.org/R1.2/cfssl_linux-amd64
+
 chmod +x cfssl_linux-amd64
 sudo mv cfssl_linux-amd64 /usr/local/bin/cfssl
 sudo chown ec2-user:ec2-user /usr/local/bin/cfssl
 wget https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64
+
 chmod +x cfssljson_linux-amd64
 sudo mv cfssljson_linux-amd64 /usr/local/bin/cfssljson
 sudo chown ec2-user:ec2-user /usr/local/bin/cfssljson

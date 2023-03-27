@@ -9,7 +9,7 @@ data "aws_iam_policy_document" "ec2_assume_role" {
   }
 }
 
-## Bastion Host
+# Bastion Host
 data "aws_iam_policy_document" "bastion" {
   statement {
     sid = "bastion"
