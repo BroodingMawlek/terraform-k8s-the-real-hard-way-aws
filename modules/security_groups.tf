@@ -138,9 +138,9 @@ resource "aws_security_group_rule" "allow_ingress_on_bastion_kubectl" {
   }
   security_group_id        = each.value
   type                     = "ingress"
-  from_port                = 6443 # beginning of range
-  to_port                  = 6443 # end of range
-  protocol                 = "tcp" # set
+  from_port                = 6443                          # beginning of range
+  to_port                  = 6443                          # end of range
+  protocol                 = "tcp"                         # set
   source_security_group_id = aws_security_group.bastion.id # source
   description              = "kubectl: Bastion - ${each.key}"
 }
@@ -184,9 +184,15 @@ resource "aws_security_group_rule" "allow_ingress_on_master-private-lb_kubeapi" 
   from_port         = 6443
   to_port           = 6443
   protocol          = "tcp"
+<<<<<<< Updated upstream
 #  cidr_blocks       = ["0.0.0.0/0"]
   cidr_blocks       = ["9.23.0.0/16"]
   description       = "kubeapi: ALL - MasterPrivateLB"
+=======
+  #  cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks = ["10.23.0.0/16"]
+  description = "kubeapi: ALL - MasterPrivateLB"
+>>>>>>> Stashed changes
 }
 
 ### etcd
