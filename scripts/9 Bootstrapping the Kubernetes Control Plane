@@ -1,14 +1,30 @@
-#SSH to master1 master2 master3 via tmux multiplexer and execute in parallel on each master node
+1, First we get the masterhost internal IPv4 address and set the hostname:\
+2, Get the latest stable Kubernetes version\
+3, Generate the Kubernetes config directory, download kube components and move them to /usr/local/bin:\
+4, Create the directory for certificates, keys and encryption config and move them there:\
+5, Get the etcd nodes IPv4 addresses for the systemd unit file generation:\
+6, Create the kube-apiserver systemd file.\
+7, Move kube-controller-manager kubeconfig to Kubernetes directory:\
+8, Create kube-controller-manager systemd unit file:\
+9, Move kube-scheduler kubeconfig to Kubernetes directory:\
+10, Create the KubeSchedulerConfiguration config:\
+11, Create the kube-scheduler systemd unit file:\
+12, Move the files to the right place, reload systemd and enable + start the kube-* services:\
 
-#First we get the masterhost internal IPv4 address and set the hostname:
 
+SSH to master1 master2 master3 via tmux multiplexer and execute in parallel on each master node
+
+First we get the masterhost internal IPv4 address and set the hostname:
+
+```
 export MASTERHOST=$(aws ec2 describe-tags --filters "Name=resource-id,Values=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)" "Name=key,Values=Name" --output=text | cut -f 5)
 sudo hostnamectl set-hostname --static $MASTERHOST.internal.$HOSTEDZONE_NAME
 echo "$INTERNAL_IP $MASTERHOST.internal.$HOSTEDZONE_NAME" | sudo tee -a /etc/hosts
-
 KUBERNETES_STABLE=$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)
 echo $KUBERNETES_STABLE
+```
 
+```
 sudo mkdir -p /etc/kubernetes/config
 
 
@@ -25,7 +41,9 @@ sudo mv ca.pem ca-key.pem kubernetes-key.pem kubernetes.pem encryption-config.ya
 
 for i in 1 2 3; do export ETCD${i}_INTERNAL=$(dig +short etcd${i}.internal.${HOSTEDZONE_NAME}); done
 
+```
 
+```
 cat > kube-apiserver.service <<EOF
 [Unit]
 Description=Kubernetes API Server
@@ -47,7 +65,7 @@ ExecStart=/usr/local/bin/kube-apiserver \\
   --etcd-cafile=/var/lib/kubernetes/ca.pem \\
   --etcd-certfile=/var/lib/kubernetes/kubernetes.pem \\
   --etcd-keyfile=/var/lib/kubernetes/kubernetes-key.pem \\
-  --etcd-servers=https://${ETCD1_INTERNAL}:2379,https://${ETCD2_INTERNAL}:2379,https://${ETCD3_INTERNAL}:2379 \\
+  --etcd-servers=https://${ETCD1_INTERNAL}:2379 \\
   --event-ttl=1h \\
   --encryption-provider-config=/var/lib/kubernetes/encryption-config.yaml \\
   --insecure-bind-address=127.0.0.1 \\
@@ -69,8 +87,15 @@ RestartSec=5
 WantedBy=multi-user.target
 EOF
 
+```
+
+
+```
 sudo mv kube-controller-manager.kubeconfig /var/lib/kubernetes/
 
+```
+
+```
 cat > kube-controller-manager.service <<EOF
 [Unit]
 Description=Kubernetes Controller Manager
@@ -95,9 +120,14 @@ RestartSec=5
 [Install]
 WantedBy=multi-user.target
 EOF
+```
 
+
+```
 sudo mv kube-scheduler.kubeconfig /var/lib/kubernetes/
+```
 
+```
 cat <<EOF | sudo tee /etc/kubernetes/config/kube-scheduler.yaml
 apiVersion: componentconfig/v1alpha1
 kind: KubeSchedulerConfiguration
@@ -124,11 +154,18 @@ RestartSec=5
 WantedBy=multi-user.target
 EOF
 
+```
+
+
+
+
+```
 sudo mv kube-apiserver.service kube-scheduler.service kube-controller-manager.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable kube-apiserver kube-controller-manager kube-scheduler
 sudo systemctl start kube-apiserver kube-controller-manager kube-scheduler
 
+```
 
 
 
