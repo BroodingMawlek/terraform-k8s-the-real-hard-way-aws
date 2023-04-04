@@ -1,0 +1,128 @@
+$kubectl cluster-info dump
+The connection to the server 127.0.0.1:6443 was refused - did you specify the right host or port?
+
+
+$kubectl get cs -v=8
+
+I0404 15:36:50.826680   16992 round_trippers.go:420] GET http://localhost:8080/api?timeout=32s
+I0404 15:36:50.826901   16992 round_trippers.go:427] Request Headers:
+I0404 15:36:50.826999   16992 round_trippers.go:431]     User-Agent: kubectl/v1.16.3 (linux/amd64) kubernetes/b3cbbae
+I0404 15:36:50.827024   16992 round_trippers.go:431]     Accept: application/json, */*
+I0404 15:36:50.827482   16992 round_trippers.go:446] Response Status:  in 0 milliseconds
+I0404 15:36:50.827664   16992 round_trippers.go:449] Response Headers:
+I0404 15:36:50.827825   16992 cached_discovery.go:121] skipped caching discovery info due to Get http://localhost:8080/
+api?timeout=32s: dial tcp 127.0.0.1:8080: connect: connection refused
+I0404 15:36:50.827892   16992 helpers.go:217] Connection error: Get http://localhost:8080/api?timeout=32s: dial tcp 127
+.0.0.1:8080: connect: connection refused
+
+
+$kubectl get cs -v=8 --kubeconfig=admin.kubeconfig
+I0404 15:34:17.755773   16765 loader.go:375] Config loaded from file:  admin.kubeconfig
+I0404 15:34:17.757012   16765 round_trippers.go:420] GET https://127.0.0.1:6443/api?timeout=32s
+I0404 15:34:17.757050   16765 round_trippers.go:427] Request Headers:
+I0404 15:34:17.757072   16765 round_trippers.go:431]     Accept: application/json, */*
+I0404 15:34:17.757091   16765 round_trippers.go:431]     User-Agent: kubectl/v1.16.3 (linux/amd64) kubernetes/b3cbbae
+I0404 15:34:17.757494   16765 round_trippers.go:446] Response Status:  in 0 milliseconds
+I0404 15:34:17.757521   16765 round_trippers.go:449] Response Headers:
+I0404 15:34:17.757563   16765 cached_discovery.go:121] skipped caching discovery info due to Get https://127.0.0.1:6443
+/api?timeout=32s: dial tcp 127.0.0.1:6443: connect: connection refused
+
+
+$systemctl status kube-apiserver
+
+ kube-apiserver.service - Kubernetes API Server
+   Loaded: loaded (/etc/systemd/system/kube-apiserver.service; enabled; vendor preset: enabled)
+   Active: activating (auto-restart) (Result: exit-code) since Tue 2023-04-04 15:39:52 UTC; 3s ago
+     Docs: https://github.com/kubernetes/kubernetes
+  Process: 17267 ExecStart=/usr/local/bin/kube-apiserver --enable-admission-plugins=NamespaceLifecycle,LimitRanger,Serv
+iceAccount,TaintNodesByCondition,Priority,DefaultTolerationSeconds,DefaultStorageClass,PersistentVolumeClaimResize,Muta
+tingAdmissionWebhook,ValidatingAdmissionWebhook,ResourceQuota --advertise-address=10.23.1.39 --allow-privileged=true --
+apiserver-count=1 --audit-log-maxage=30 --audit-log-maxbackup=3 --audit-log-maxsize=100 --audit-log-path=/var/log/audit
+.log --authorization-mode=Node,RBAC --bind-address=0.0.0.0 --client-ca-file=/var/lib/kubernetes/ca.pem --etcd-cafile=/v
+ar/lib/kubernetes/ca.pem --etcd-certfile=/var/lib/kubernetes/kubernetes.pem --etcd-keyfile=/var/lib/kubernetes/kubernet
+es-key.pem --etcd-servers=https://10.23.1.42:2379 --event-ttl=1h --encryption-provider-config=/var/lib/kubernetes/encry
+ption-config.yaml --insecure-bind-address=127.0.0.1 --kubelet-certificate-authority=/var/lib/kubernetes/ca.pem --kubele
+t-client-certificate=/var/lib/kubernetes/kubernetes.pem --kubelet-client-key=/var/lib/kubernetes/kubernetes-key.pem --k
+ubelet-https=true --runtime-config=api/all --service-account-key-file=/var/lib/kubernetes/ca-key.pem --service-cluster-
+ip-range=10.32.0.0/24 --service-node-port-range=30000-32767 --tls-cert-file=/var/lib/kubernetes/kubernetes.pem --tls-pr
+ivate-key-file=/var/lib/kubernetes/kubernetes-key.pem --v=5 (code=exited, status=2)
+ Main PID: 17267 (code=exited, status=2)
+
+$systemctl status kube-controller-manager
+
+● kube-controller-manager.service - Kubernetes Controller Manager
+   Loaded: loaded (/etc/systemd/system/kube-controller-manager.service; enabled; vendor preset: enabled)
+   Active: active (running) since Tue 2023-04-04 14:16:03 UTC; 1h 24min ago
+     Docs: https://github.com/kubernetes/kubernetes
+ Main PID: 9019 (kube-controller)
+    Tasks: 8 (limit: 2307)
+   CGroup: /system.slice/kube-controller-manager.service
+           └─9019 /usr/local/bin/kube-controller-manager --address=0.0.0.0 --cluster-cidr=10.200.0.0/16 --cluster-name=
+...skipping...
+
+● kube-controller-manager.service - Kubernetes Controller Manager
+   Loaded: loaded (/etc/systemd/system/kube-controller-manager.service; enabled; vendor preset: enabled)
+   Active: active (running) since Tue 2023-04-04 14:16:03 UTC; 1h 25min ago
+     Docs: https://github.com/kubernetes/kubernetes
+ Main PID: 9019 (kube-controller)
+    Tasks: 8 (limit: 2307)
+   CGroup: /system.slice/kube-controller-manager.service
+           └─9019 /usr/local/bin/kube-controller-manager --address=0.0.0.0 --cluster-cidr=10.200.0.0/16 --cluster-name=
+kubernetes --cluster-signing-cert-file=/var/lib/kubernetes/ca.pem --cluster-signing-key-file=/var/lib/kubernetes/ca-key
+.pem --leader-elect=true --master=http://127.0.0.1:8080 --root-ca-file=/var/lib/kubernetes/ca.pem --service-account-pri
+vate-key-file=/var/lib/kubernetes/ca-key.pem --service-cluster-ip-range=10.32.0.0/24 --v=2
+
+Apr 04 15:39:55 master1.internal.k8-the-hard-way.com kube-controller-manager[9019]: E0404 15:39:55.951607    9019 leade
+relection.go:330] error retrieving resource lock kube-system/kube-controller-manager: Get http://127.0.0.1:8080/api/v1/
+namespaces/kube-system/endpoints/kube-controller-manager?timeout=10s: dial tcp 127.0.0.1:8080: connect: connection refu
+sed
+
+$systemctl status kube-scheduler
+
+● kube-scheduler.service - Kubernetes Scheduler
+   Loaded: loaded (/etc/systemd/system/kube-scheduler.service; enabled; vendor preset: enabled)
+   Active: active (running) since Tue 2023-04-04 14:16:03 UTC; 1h 28min ago
+     Docs: https://github.com/kubernetes/kubernetes
+ Main PID: 9023 (kube-scheduler)
+    Tasks: 10 (limit: 2307)
+   CGroup: /system.slice/kube-scheduler.service
+           └─9023 /usr/local/bin/kube-scheduler --leader-elect=true --master=http://127.0.0.1:8080 --v=2
+
+Apr 04 15:44:44 master1.internal.k8-the-hard-way.com kube-scheduler[9023]: E0404 15:44:44.795253    9023 reflector.go:1
+23] k8s.io/client-go/informers/factory.go:134: Failed to list *v1.StorageClass: Get http://127.0.0.1:8080/apis/storage.
+k8s.io/v1/storageclasses?limit=500&resourceVersion=0: dial tcp 127.0.0.1:8080: connect: connection refused
+Apr 04 15:44:44 master1.internal.k8-the-hard-way.com kube-scheduler[9023]: E0404 15:44:44.796417    9023 reflector.go:1
+23] k8s.io/client-go/informers/factory.go:134: Failed to list *v1.PersistentVolumeClaim: Get http://127.0.0.1:8080/api/
+v1/persistentvolumeclaims?limit=500&resourceVersion=0: dial tcp 127.0.0.1:8080: connect: connection refused
+Apr 04 15:44:44 master1.internal.k8-the-hard-way.com kube-scheduler[9023]: E0404 15:44:44.797953    9023 reflector.go:1
+23] k8s.io/client-go/informers/factory.go:134: Failed to list *v1.PersistentVolume: Get http://127.0.0.1:8080/api/v1/pe
+rsistentvolumes?limit=500&resourceVersion=0: dial tcp 127.0.0.1:8080: connect: connection refused
+Apr 04 15:44:44 master1.internal.k8-the-hard-way.com kube-scheduler[9023]: E0404 15:44:44.799135    9023 reflector.go:1
+23] k8s.io/client-go/informers/factory.go:134: Failed to list *v1.Node: Get http://127.0.0.1:8080/api/v1/nodes?limit=50
+0&resourceVersion=0: dial tcp 127.0.0.1:8080: connect: connection refused
+Apr 04 15:44:44 master1.internal.k8-the-hard-way.com kube-scheduler[9023]: E0404 15:44:44.800290    9023 reflector.go:1
+23] k8s.io/client-go/informers/factory.go:134: Failed to list *v1.ReplicationController: Get http://127.0.0.1:8080/api/
+v1/replicationcontrollers?limit=500&resourceVersion=0: dial tcp 127.0.0.1:8080: connect: connection refused
+Apr 04 15:44:44 master1.internal.k8-the-hard-way.com kube-scheduler[9023]: E0404 15:44:44.802150    9023 reflector.go:1
+23] k8s.io/client-go/informers/factory.go:134: Failed to list *v1.ReplicaSet: Get http://127.0.0.1:8080/apis/apps/v1/re
+plicasets?limit=500&resourceVersion=0: dial tcp 127.0.0.1:8080: connect: connection refused
+Apr 04 15:44:44 master1.internal.k8-the-hard-way.com kube-scheduler[9023]: E0404 15:44:44.803208    9023 reflector.go:1
+23] k8s.io/client-go/informers/factory.go:134: Failed to list *v1beta1.PodDisruptionBudget: Get http://127.0.0.1:8080/a
+pis/policy/v1beta1/poddisruptionbudgets?limit=500&resourceVersion=0: dial tcp 127.0.0.1:8080: connect: connection refus
+ed
+Apr 04 15:44:44 master1.internal.k8-the-hard-way.com kube-scheduler[9023]: E0404 15:44:44.804632    9023 reflector.go:1
+23] k8s.io/client-go/informers/factory.go:134: Failed to list *v1.StatefulSet: Get http://127.0.0.1:8080/apis/apps/v1/s
+tatefulsets?limit=500&resourceVersion=0: dial tcp 127.0.0.1:8080: connect: connection refused
+"error-kube-scheduler" 19L, 3936C
+
+$ curl --cacert /var/lib/kubernetes/ca.pem \
+>   --key /var/lib/kubernetes/kubernetes-key.pem \
+>   --cert /var/lib/kubernetes/kubernetes.pem \
+>   -i https://127.0.0.1:6443/healthz
+curl: (35) OpenSSL SSL_connect: SSL_ERROR_SYSCALL in connection to 127.0.0.1:6443
+
+
+
+
+
+

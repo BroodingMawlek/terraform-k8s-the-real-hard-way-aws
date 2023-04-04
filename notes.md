@@ -24,8 +24,13 @@ Change the name of the internal and external elbs which are currently\
 master - internal-master.eu-west-2.elb.amazonaws.com\
 master - master.eu-west-2.elb.amazonaws.com
 
+etcd\
+serving insecure client requests on 127.0.0.1:2379, this is strongly discouraged
 
 ## Learning
+
+ssh config
+
 
 #####What is in  a kubeconfig file ?
 
