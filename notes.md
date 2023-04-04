@@ -14,7 +14,9 @@ Moved user-data into ./user-data
 
 ## Documentation notes
 To ssh to the bastion\
-ssh -i <public_key ec2-user@<bastion-public-ip>
+ssh -i <public_key ec2-user@<bastion-public-ip>\
+Must use specific Kubernetes version or will get errors due to missing fields
+Re-deploying servers will cause cert problems
 
 ## Improvements
 Enable session manager and remove bastion\
