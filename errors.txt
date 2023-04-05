@@ -27,7 +27,7 @@ I0404 15:34:17.757521   16765 round_trippers.go:449] Response Headers:
 I0404 15:34:17.757563   16765 cached_discovery.go:121] skipped caching discovery info due to Get https://127.0.0.1:6443
 /api?timeout=32s: dial tcp 127.0.0.1:6443: connect: connection refused
 
-
+Tuesday eve
 $systemctl status kube-apiserver
 
  kube-apiserver.service - Kubernetes API Server
@@ -47,6 +47,39 @@ ubelet-https=true --runtime-config=api/all --service-account-key-file=/var/lib/k
 ip-range=10.32.0.0/24 --service-node-port-range=30000-32767 --tls-cert-file=/var/lib/kubernetes/kubernetes.pem --tls-pr
 ivate-key-file=/var/lib/kubernetes/kubernetes-key.pem --v=5 (code=exited, status=2)
  Main PID: 17267 (code=exited, status=2)
+
+Wednesday Morning
+● kube-apiserver.service - Kubernetes API Server
+   Loaded: loaded (/etc/systemd/system/kube-apiserver.service; enabled; vendor preset: enabled)
+   Active: active (running) since Wed 2023-04-05 05:12:09 UTC; 2s ago
+     Docs: https://github.com/kubernetes/kubernetes
+ Main PID: 29962 (kube-apiserver)
+    Tasks: 9 (limit: 2307)
+   CGroup: /system.slice/kube-apiserver.service
+           └─29962 /usr/local/bin/kube-apiserver --enable-admission-plugins=NamespaceLifecycle,LimitRanger,ServiceAccount,TaintNodesByCondition,Priority,DefaultTolerationSeconds,DefaultStorageClass,PersistentVolumeClaimResize,MutatingAdmissionWebhook,ValidatingAdmissionWebhook,ResourceQuota --advertise-address=10.23.1.39 --allow-privileged=true --apiserver-count=1 --audit-log-maxage=30 --audit-log-maxbackup=3 --audit-log-maxsize=100 --audit-log-path=/var/log/audit.log --authorization-mode=Node,RBAC --bind-address=0.0.0.0 --client-ca-file=/var/lib/kubernetes/ca.pem --etcd-cafile=/var/lib/kubernetes/ca.pem --etcd-certfile=/var/lib/kubernetes/kubernetes.pem --etcd-keyfile=/var/lib/kubernetes/kubernetes-key.pem --etcd-servers=https://10.23.1.42:2379 --event-ttl=1h --encryption-provider-config=/var/lib/kubernetes/encryption-config.yaml --insecure-bind-address=127.0.0.1 --kubelet-certificate-authority=/var/lib/kubernetes/ca.pem --kubelet-client-certificate=/var/lib/kubernetes/kubernetes.pem --kubelet-client-key=/var/lib/kubernetes/kubernetes-key.pem --kubelet-https=true --runtime-config=api/all --service-account-key-file=/var/lib/kubernetes/ca-key.pem --service-cluster-ip-range=10.32.0.0/24 --service-node-port-range=30000-32767 --tls-cert-file=/var/lib/kubernetes/kubernetes.pem --tls-private-key-file=/var/lib/kubernetes/kubernetes-key.pem --v=5
+
+Apr 05 05:12:10 master1.internal.k8-the-hard-way.com kube-apiserver[29962]: I0405 05:12:10.707880   29962 services.go:45] Setting service IP to "10.32.0.1" (read-write).
+Apr 05 05:12:10 master1.internal.k8-the-hard-way.com kube-apiserver[29962]: I0405 05:12:10.712383   29962 plugins.go:158] Loaded 10 mutating admission controller(s) successfully in the following order: NamespaceLifecycle,LimitRanger,ServiceAccount,TaintNodesByCondition,Priority,DefaultTolerationSeconds,DefaultStorageClass,StorageObjectInUseProtection,MutatingAdmissionWebhook,RuntimeClass.
+Apr 05 05:12:10 master1.internal.k8-the-hard-way.com kube-apiserver[29962]: I0405 05:12:10.712444   29962 plugins.go:161] Loaded 7 validating admission controller(s) successfully in the following order: LimitRanger,ServiceAccount,Priority,PersistentVolumeClaimResize,ValidatingAdmissionWebhook,RuntimeClass,ResourceQuota.
+Apr 05 05:12:10 master1.internal.k8-the-hard-way.com kube-apiserver[29962]: I0405 05:12:10.721534   29962 client.go:357] parsed scheme: "endpoint"
+Apr 05 05:12:10 master1.internal.k8-the-hard-way.com kube-apiserver[29962]: I0405 05:12:10.721734   29962 endpoint.go:68] ccResolverWrapper: sending new addresses to cc: [{https://10.23.1.42:2379 0  <nil>}]
+Apr 05 05:12:10 master1.internal.k8-the-hard-way.com kube-apiserver[29962]: W0405 05:12:10.740646   29962 clientconn.go:1120] grpc: addrConn.createTransport failed to connect to {https://10.23.1.42:2379 0  <nil>}.
+Err :connection error: desc = "transport: authentication handshake failed:
+x509: certificate is valid for 10.32.0.1, 127.0.0.1, not 10.23.1.42". Reconnecting...
+
+
+Wednesday morning after fixing cert
+
+● kube-apiserver.service - Kubernetes API Server
+   Loaded: loaded (/etc/systemd/system/kube-apiserver.service; enabled; vendor preset: enabled)
+   Active: activating (auto-restart) (Result: exit-code) since Wed 2023-04-05 06:10:00 UTC; 3s ago
+     Docs: https://github.com/kubernetes/kubernetes
+  Process: 3479 ExecStart=/usr/local/bin/kube-apiserver --enable-admission-plugins=NamespaceLifecycle,LimitRanger,ServiceAccount,TaintNodesByCondition,Priority,DefaultTolerationSeconds,DefaultStorageClass,PersistentVolumeClaimResize,MutatingAdmissionWebhook,ValidatingAdmissionWebhook,ResourceQuota --advertise-address=10.23.1.39 --allow-privileged=true --apiserver-count=1 --audit-log-maxage=30 --audit-log-maxbackup=3 --audit-log-maxsize=100 --audit-log-path=/var/log/audit.log --authorization-mode=Node,RBAC --bind-address=0.0.0.0 --client-ca-file=/var/lib/kubernetes/ca.pem --etcd-cafile=/var/lib/kubernetes/ca.pem --etcd-certfile=/var/lib/kubernetes/kubernetes.pem --etcd-keyfile=/var/lib/kubernetes/kubernetes-key.pem --etcd-servers=https://10.23.1.42:2379 --event-ttl=1h --encryption-provider-config=/var/lib/kubernetes/encryption-config.yaml --insecure-bind-address=127.0.0.1 --kubelet-certificate-authority=/var/lib/kubernetes/ca.pem --kubelet-client-certificate=/var/lib/kubernetes/kubernetes.pem --kubelet-client-key=/var/lib/kubernetes/kubernetes-key.pem --kubelet-https=true --runtime-config=api/all --service-account-key-file=/var/lib/kubernetes/ca-key.pem --service-cluster-ip-range=10.32.0.0/24 --service-node-port-range=30000-32767 --tls-cert-file=/var/lib/kubernetes/kubernetes.pem --tls-private-key-file=/var/lib/kubernetes/kubernetes-key.pem --v=5 (code=exited, status=2)
+ Main PID: 3479 (code=exited, status=2)
+
+Apr 05 06:10:00 master1.internal.k8-the-hard-way.com systemd[1]: kube-apiserver.service: Failed with result 'exit-code'.
+
+
 
 $systemctl status kube-controller-manager
 
